@@ -1,51 +1,30 @@
 #!/bin/bash
 
 # --- Configuration & Colors ---
-set -e # Exit on error
+set -e
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
 log() { echo -e "${BLUE}🚀 $1${NC}"; }
-warn() { echo -e "${YELLOW}⚠️  $1${NC}"; }
 success() { echo -e "${GREEN}✅ $1${NC}"; }
 
-# --- 1. Environment & Architecture ---
-setup_arch() {
-    if [[ $(uname -m) == "arm64" ]]; then
-        HOMEBREW_PREFIX="/opt/homebrew"
-    else
-        HOMEBREW_PREFIX="/usr/local"
-    fi
-    # Immediate path availability for the current script
-    eval "$($HOMEBREW_PREFIX/bin/brew shellenv 2>/dev/null || true)"
-}
+# --- 1. Environment ---
+# We still need this in case you ran the first script, closed the terminal, and came back later!
+if [[ $(uname -m) == "arm64" ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv 2>/dev/null || true)"
+else
+    eval "$(/usr/local/bin/brew shellenv 2>/dev/null || true)"
+fi
 
-# --- 2. Core Dependencies ---
-install_base_tools() {
-    log "Checking Xcode Command Line Tools..."
-    if ! xcode-select -p &> /dev/null; then
-        xcode-select --install
-        warn "Wait for the UI installer to finish, then press Enter."
-        read -p ""
-    fi
-
-    log "Checking Homebrew..."
-    if ! command -v brew &> /dev/null; then
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    fi
-    setup_arch
-}
-
-# --- 3. Package Management (CLI & GUI) ---
+# --- 2. Package Management (CLI & GUI) ---
 install_packages() {
     log "Installing Brew Packages..."
-    # Using 'mise' for 2026 standard env management
+    # aria2 and xcodes have been removed from this list
     local packages=(
         fd fzf gh ripgrep mise git-delta neovim 
-        aria2 xcodesorg/made/xcodes exiftool bat jq 
-        xcbeautify zoxide eza tldr tmux swiftlint
+        exiftool bat jq xcbeautify zoxide eza tldr tmux swiftlint node font-hack-nerd-font tree-sitter-cli
     )
     brew install "${packages[@]}"
 
@@ -54,7 +33,7 @@ install_packages() {
     brew install --cask "${casks[@]}"
 }
 
-# --- 4. Configuration (Neovim & Ruby) ---
+# --- 3. Configuration (Neovim & Ruby) ---
 configure_apps() {
     log "Setting up Neovim..."
     mkdir -p "$HOME/.config"
@@ -62,15 +41,16 @@ configure_apps() {
         git clone https://github.com/carVaba/nvim-carvaba.git "$HOME/.config/nvim"
     fi
 
-    log "Configuring Ruby via Mise (Modern rbenv alternative)..."
+    log "Configuring Ruby via Mise..."
     if ! grep -q 'eval "$(mise activate zsh)"' "$HOME/.zshrc"; then
         echo 'eval "$(mise activate zsh)"' >> "$HOME/.zshrc"
     fi
     eval "$(mise activate bash)"
+    mise settings ruby.compile=false
     mise use --global ruby@3.4.3
 }
 
-# --- 5. Shell & System ---
+# --- 4. Shell & System ---
 configure_shell() {
     log "Setting up Oh My Zsh..."
     if [ ! -d "$HOME/.oh-my-zsh" ]; then
@@ -79,15 +59,9 @@ configure_shell() {
 
     local ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
     
-    # Plugin cloning helper
-    clone_plugin() {
-        [[ ! -d "$ZSH_CUSTOM/plugins/$1" ]] && git clone "https://github.com/zsh-users/$1" "$ZSH_CUSTOM/plugins/$1"
-    }
+    [[ ! -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ]] && git clone "https://github.com/zsh-users/zsh-autosuggestions" "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
+    [[ ! -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ]] && git clone "https://github.com/zsh-users/zsh-syntax-highlighting" "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
 
-    clone_plugin "zsh-autosuggestions"
-    clone_plugin "zsh-syntax-highlighting"
-
-    # Idempotent plugin update
     log "Updating .zshrc plugins..."
     sed -i '' 's/^plugins=(.*/plugins=(git zsh-autosuggestions zsh-syntax-highlighting sublime zoxide)/' "$HOME/.zshrc"
     
@@ -99,13 +73,11 @@ configure_shell() {
 
 # --- Main Execution ---
 main() {
-    setup_arch
-    install_base_tools
     install_packages
     configure_apps
     configure_shell
 
-    success "CORE SETUP COMPLETE!"
+    success "ENVIRONMENT SETUP COMPLETE!"
     echo "1. Run 'gh auth login' to finish GitHub setup."
     echo "2. Run 'source ~/.zshrc' to refresh your current terminal."
 }
