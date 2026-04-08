@@ -1,11 +1,14 @@
-# NVim Configuration
+# 🌙 nvim-carvaba & Mac Setup
 
 A modern and customizable NeoVim setup to supercharge your development workflow. This configuration is optimized for performance, supports multiple languages, and includes advanced features like LSP, auto-completion, and syntax highlighting.
+
+Also can do initial configuration for setup the dev environment on Mac
 
 ---
 
 ## 📦 Features
 
+- **Automated macOS Setup:** One-script installation for Homebrew, Ruby (Mise), Node.js, and CLI tools.
 - Fully integrated with LSP for intelligent coding assistance.
 - Pre-configured plugins for a seamless development experience.
 - Optimized key mappings and UI enhancements.
@@ -13,70 +16,35 @@ A modern and customizable NeoVim setup to supercharge your development workflow.
 
 ---
 
-## 🚀 Installation
+## 🚀 Quick Start (New Machine)
 
-### Prerequisites
 
-Make sure the following tools are installed on your system:
+1. **Clone the repository:**
 
-- [NeoVim (v0.10+)](https://neovim.io/)
-- [Homebrew](https://brew.sh/) (macOS/Linux)
-- Python 3 (installed via Homebrew)
-- Node.js and npm (installed via Homebrew)
-- Xcode Command Line Tools (macOS only):
-  ```bash
-  xcode-select --install
-  ```
+```bash
+   git clone [https://github.com/carVaba/nvim-carvaba.git](https://github.com/carVaba/nvim-carvaba.git) ~/.config/nvim
+   cd ~/.config/nvim
+```
 
-### Step-by-Step Installation
+2. **Install and configure XCode**
+```bash
+chmod +x setup_xcode.sh
+./setup_xcode.sh
+```
 
-1. **Install NeoVim**
+3. **Run the setup script:**
 
-   ```bash
-   brew install neovim
-   ```
+```bash
+chmod +x first-setup.sh
+./first-setup.sh
+```
 
-2. **Clone the Repository**:
+**(Aditional step for iOS Development)**
 
-   ```bash
-   git clone https://github.com/carVaba/nvim-carvaba.git ~/.config/nvim
-   ```
+    Please chech this link https://github.com/wojciech-kulik/xcodebuild.nvim/wiki/Neovim-Configuration
 
-3. **Install Python3**:
 
-   ```bash
-   brew install python3
-   ```
-
-4. **Install Node.js**:
-
-   ```bash
-   brew install node
-   ```
-
-5. **Install Additional Tools via Homebrew**:
-
-   ```bash
-   brew install ripgrep fd fzf
-   ```
-
-6. **(Aditional step for iOS Development)**
-
-   6.1 **Install TSTreeSitter**
-
-   If you are going to use swift, you need to install the TreeSitter plugin, on command mode excute `:TSInstall swift`
-
-   6.2 **Install DAP for debugging**
-
-   Download the lastest from [codelldb](https://github.com/vadimcn/codelldb/releases)
-   Unzip the content (change the file format from vsix to zip)
-   And move it to the Developer folder
-
-   ```bash
-   mv extension ~/Developer/
-   ```
-
-7. **Markdown Installation**
+**Markdown Installation**
 
    Please before start working on the markdown file check the build is installed
 
@@ -86,9 +54,12 @@ Make sure the following tools are installed on your system:
 
    For more information check [here](https://github.com/iamcco/markdown-preview.nvim/issues/690#issuecomment-2283748484)
 
-8. **Final step**
+**Final step**
+
 
    Start nvim and let's have fun 🎉
+
+> **Note:** After the script finishes, run `source ~/.zshrc` or restart your terminal to activate all the new tools!
 
 ---
 
