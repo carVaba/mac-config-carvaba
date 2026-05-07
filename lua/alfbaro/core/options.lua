@@ -49,7 +49,7 @@ opt.splitbelow = true -- split horizontal window to the bottom
 opt.swapfile = false
 
 -- folding
--- opt.foldenable = fasle
+-- opt.foldenable = false
 opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 opt.foldmethod = "expr"
 opt.foldlevel = 99
