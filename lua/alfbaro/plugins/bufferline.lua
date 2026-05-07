@@ -7,13 +7,13 @@ return {
                     if context.buffer:current() then
                         return ''
                     end
-                    local s = " "
+                    local result = { " " }
                     for e, n in pairs(diagnostics_dict) do
-                    local sym = e == "error" and " "
-                        or (e == "warning" and " " or " ")
-                    s = s .. n .. sym
+                        local sym = e == "error" and " " or (e == "warning" and " " or " ")
+                        table.insert(result, tostring(n))
+                        table.insert(result, sym)
                     end
-                    return s
+                    return table.concat(result)
                 end,
                 offsets = {
                     {
