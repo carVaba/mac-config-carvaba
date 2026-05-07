@@ -44,5 +44,24 @@ return {
       local hl = "DiagnosticSign" .. type
       vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
     end
+
+    vim.diagnostic.config({
+        float = { border = "rounded" },
+        virtual_text = true,
+        signs = {
+            text = {
+                [vim.diagnostic.severity.ERROR] = signs.Error,
+                [vim.diagnostic.severity.WARN] = signs.Warn,
+                [vim.diagnostic.severity.HINT] = signs.Hint,
+                [vim.diagnostic.severity.INFO] = signs.Info,
+            },
+            linehl = {
+                [vim.diagnostic.severity.ERROR] = "ErrorMsg",
+            },
+            numhl = {
+                [vim.diagnostic.severity.WARN] = "WarningMsg",
+            },
+        },
+    })
   end,
 }

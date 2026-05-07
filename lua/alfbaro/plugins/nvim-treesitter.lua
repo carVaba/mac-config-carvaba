@@ -1,9 +1,8 @@
  return {
   "nvim-treesitter/nvim-treesitter",
-  commit = "90cd658",
-   main = "nvim-treesitter",
+  main = "nvim-treesitter",
   version = false, -- last release is way too old and doesn't work on Windows
-  -- build = ":TSUpdate",
+  build = ":TSUpdate",
   event = { "BufReadPost", "BufNewFile" },
   init = function()
     local highlight = function(bufnr, lang)
