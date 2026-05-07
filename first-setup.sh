@@ -54,7 +54,17 @@ configure_apps() {
 configure_shell() {
     log "Setting up Oh My Zsh..."
     if [ ! -d "$HOME/.oh-my-zsh" ]; then
-        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+        local INSTALL_SCRIPT="/tmp/omz_install.sh"
+        local EXPECTED_CHECKSUM="21043aec5b791ce4835479dc33ba2f92155946aeafd54604a8c83522627cc803"
+        curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/3604dc23e0d95b5ce9a3932838a7b103ef5ff0c1/tools/install.sh -o "$INSTALL_SCRIPT"
+        if echo "$EXPECTED_CHECKSUM  $INSTALL_SCRIPT" | shasum -a 256 -c - >/dev/null 2>&1; then
+            sh "$INSTALL_SCRIPT" --unattended
+            rm -f "$INSTALL_SCRIPT"
+        else
+            echo "Checksum verification failed for Oh My Zsh install script!" >&2
+            rm -f "$INSTALL_SCRIPT"
+            exit 1
+        fi
     fi
 
     local ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
