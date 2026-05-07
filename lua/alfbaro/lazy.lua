@@ -31,3 +31,10 @@ require("lazy").setup({
       notify = false,
   },
 })
+
+
+require("lualine").setup {
+    options = {
+        disabled_filetypes = { "NvimTree", "packer" }
+    }
+}
