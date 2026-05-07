@@ -29,7 +29,7 @@ install_packages() {
     brew install "${packages[@]}"
 
     log "Installing GUI applications..."
-    local casks=(iterm2 sublime-text sublime-merge proxyman)
+    local casks=(iterm2 sublime-text sublime-merge proxyman alfred)
     brew install --cask "${casks[@]}"
 }
 
