@@ -3,9 +3,7 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
         local lualine = require("lualine")
-        madrid_time = function()
-            return os.date("%H:%M", os.time() + (6*3600))
-        end
+        local time_utils = require("alfbaro.utils.time")
        lualine.setup({
             options = {
                 theme = 'solarized_dark'
@@ -17,7 +15,7 @@ return {
                 lualine_c = { },
                 lualine_x = { { "fileformat", symbols = { unix = "" } } },
                 lualine_y = { "progress" },
-                lualine_z = { "location", madrid_time , " " }
+                lualine_z = { "location", time_utils.lima_time , " " }
             }
         })
     end, 
