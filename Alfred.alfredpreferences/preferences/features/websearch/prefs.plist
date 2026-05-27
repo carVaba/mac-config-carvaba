@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>customSites</key>
+	<dict>
+		<key>C3D06D4A-0242-4DEF-BA35-D1774AED2923</key>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>keyword</key>
+			<string>wa</string>
+			<key>text</key>
+			<string>Whatsapp</string>
+			<key>url</key>
+			<string>https://web.whatsapp.com</string>
+		</dict>
+		<key>DBFE1A26-9D3D-4B8E-BAE1-A1498262AA14</key>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>keyword</key>
+			<string>ml</string>
+			<key>text</key>
+			<string>MercadoLibre</string>
+			<key>url</key>
+			<string>https://listado.mercadolibre.com.pe/{query}</string>
+		</dict>
+		<key>DF5915B4-8C21-4E66-9248-9D71847B26CC</key>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>keyword</key>
+			<string>gd</string>
+			<key>text</key>
+			<string>glassdoor</string>
+			<key>url</key>
+			<string>https://www.glassdoor.com/Search/results.htm?keyword={query}</string>
+		</dict>
+	</dict>
+</dict>
+</plist>
