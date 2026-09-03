@@ -20,11 +20,9 @@ local icon_quit = string.char(0xF0, 0x9F, 0x9A, 0xAA) -- U+1F6AA door
 local dashboard_header = table.concat({
   "",
   "",
-  "        " .. icon_coffee .. "    " .. icon_camera .. "    " .. icon_phone,
+  icon_coffee .. "    " .. icon_camera .. "    " .. icon_phone,
   "",
-  "            nvim-carvaba",
-  "",
-  "     coffee \194\183 code \194\183 photography",
+  "Tough times never last, but tough people do",
   "",
 }, "\n")
 
