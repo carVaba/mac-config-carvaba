@@ -22,7 +22,7 @@ Also can do initial configuration for setup the dev environment on Mac
 1. **Clone the repository:**
 
 ```bash
-   git clone [https://github.com/carVaba/nvim-carvaba.git](https://github.com/carVaba/nvim-carvaba.git) ~/.config/nvim
+   git clone https://github.com/carVaba/nvim-carvaba.git ~/.config/nvim
    cd ~/.config/nvim
 ```
 
@@ -39,9 +39,9 @@ chmod +x first-setup.sh
 ./first-setup.sh
 ```
 
-**(Aditional step for iOS Development)**
+**(Additional step for iOS Development)**
 
-    Please chech this link https://github.com/wojciech-kulik/xcodebuild.nvim/wiki/Neovim-Configuration
+    Please check this link https://github.com/wojciech-kulik/xcodebuild.nvim/wiki/Neovim-Configuration
 
 
 **Markdown Installation**

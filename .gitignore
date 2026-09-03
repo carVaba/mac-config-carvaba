@@ -20,3 +20,6 @@ Icon?
 .fseventsd
 nvim.tar.gz
 nvim-linux-x86_64/
+
+# Local debug/startup logs
+*.log

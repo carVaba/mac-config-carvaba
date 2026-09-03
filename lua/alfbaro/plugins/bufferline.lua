@@ -1,5 +1,6 @@
 return {
 	"akinsho/bufferline.nvim",
+	event = "VeryLazy",
 	config = function()
 		require("bufferline").setup {
 			options = {
@@ -17,7 +18,7 @@ return {
                 end,
                 offsets = {
                     {
-                        filetype = "NvimTree",
+                        filetype = "snacks_picker_list",
                         text = "File Explorer",
                         separator = true
                     }

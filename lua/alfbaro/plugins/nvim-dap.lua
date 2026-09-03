@@ -1,18 +1,20 @@
 return {
   "mfussenegger/nvim-dap",
   dependencies = {
-    "wojciech-kulik/xcodebuild.nvim"
+    "wojciech-kulik/xcodebuild.nvim",
+    "rcarriga/nvim-dap-ui",
+  },
+  ft = "swift",
+  keys = {
+    { "<leader>dd", function() require("xcodebuild.integrations.dap").build_and_debug() end, desc = "Build & Debug" },
+    { "<leader>dr", function() require("xcodebuild.integrations.dap").debug_without_build() end, desc = "Debug Without Building" },
+    { "<leader>dt", function() require("xcodebuild.integrations.dap").debug_tests() end, desc = "Debug Tests" },
+    { "<leader>dT", function() require("xcodebuild.integrations.dap").debug_class_tests() end, desc = "Debug Class Tests" },
+    { "<leader>b", function() require("xcodebuild.integrations.dap").toggle_breakpoint() end, desc = "Toggle Breakpoint" },
+    { "<leader>B", function() require("xcodebuild.integrations.dap").toggle_message_breakpoint() end, desc = "Toggle Message Breakpoint" },
+    { "<leader>dx", function() require("xcodebuild.integrations.dap").terminate_session() end, desc = "Terminate Debugger" },
   },
   config = function()
-    local xcodebuild = require("xcodebuild.integrations.dap")
-    xcodebuild.setup()
-
-    vim.keymap.set("n", "<leader>dd", xcodebuild.build_and_debug, { desc = "Build & Debug" })
-    vim.keymap.set("n", "<leader>dr", xcodebuild.debug_without_build, { desc = "Debug Without Building" })
-    vim.keymap.set("n", "<leader>dt", xcodebuild.debug_tests, { desc = "Debug Tests" })
-    vim.keymap.set("n", "<leader>dT", xcodebuild.debug_class_tests, { desc = "Debug Class Tests" })
-    vim.keymap.set("n", "<leader>b", xcodebuild.toggle_breakpoint, { desc = "Toggle Breakpoint" })
-    vim.keymap.set("n", "<leader>B", xcodebuild.toggle_message_breakpoint, { desc = "Toggle Message Breakpoint" })
-    vim.keymap.set("n", "<leader>dx", xcodebuild.terminate_session, { desc = "Terminate Debugger" })
+    require("xcodebuild.integrations.dap").setup()
   end,
 }

@@ -1,14 +1,12 @@
 return {
   "neovim/nvim-lspconfig",
+  event = { "BufReadPre", "BufNewFile" },
   dependencies = {
-    { "hrsh7th/cmp-nvim-lsp" }, -- choose which plugin you use
-    { "saghen/blink.cmp" }, -- choose which plugin you use
+    { "hrsh7th/cmp-nvim-lsp" },
     { "antosha417/nvim-lsp-file-operations", config = true },
   },
   config = function()
-    -- choose which plugin you use:
     local capabilities = require("cmp_nvim_lsp").default_capabilities()
-    -- local capabilities = require("blink.cmp").get_lsp_capabilities()
 
     local lspconfig = vim.lsp.config
     local opts = { noremap = true, silent = true }
@@ -22,21 +20,29 @@ return {
       vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
 
       opts.desc = "Show LSP definition"
-      vim.keymap.set("n", "gd", "<cmd>Telescope lsp_definitions trim_text=true<cr>", opts)
+      vim.keymap.set("n", "gd", function() Snacks.picker.lsp_definitions() end, opts)
     end
 
-    lspconfig("sourcekit", {
-      capabilities = capabilities,
-      on_attach = on_attach,
-      root_dir = function(_, callback)
-        callback(
-          require("lspconfig.util").root_pattern("Package.swift")(vim.fn.getcwd())
-            or require("lspconfig.util").find_git_ancestor(vim.fn.getcwd())
-        )
+    -- Look up sourcekit-lsp and enable it only when a Swift file opens.
+    -- This avoids a blocking `xcrun` call on every Neovim startup.
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "swift",
+      once = true,
+      callback = function()
+        lspconfig("sourcekit", {
+          capabilities = capabilities,
+          on_attach = on_attach,
+          root_dir = function(_, callback)
+            callback(
+              require("lspconfig.util").root_pattern("Package.swift")(vim.fn.getcwd())
+                or require("lspconfig.util").find_git_ancestor(vim.fn.getcwd())
+            )
+          end,
+          cmd = { vim.trim(vim.fn.system("xcrun -f sourcekit-lsp")) }
+        })
+        vim.lsp.enable("sourcekit")
       end,
-      cmd = { vim.trim(vim.fn.system("xcrun -f sourcekit-lsp")) }
     })
-    vim.lsp.enable("sourcekit")
 
     -- nice icons
     local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }

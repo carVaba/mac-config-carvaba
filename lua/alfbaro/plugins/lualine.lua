@@ -8,7 +8,7 @@ return {
             options = {
                 theme = 'solarized_dark'
             },
-            disabled_filetypes = { "packer", "NvimTree" },
+            disabled_filetypes = { "packer", "snacks_picker_list" },
             sections = {
                 lualine_a = { "mode" },
                 lualine_b = { "branch", "diff" },
