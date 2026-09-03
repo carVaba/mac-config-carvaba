@@ -69,6 +69,18 @@ configure_shell() {
     defaults write -g ApplePressAndHoldEnabled -bool false
     git config --global core.pager "delta"
     git config --global delta.side-by-side true
+
+    log "Setting Neovim as the default editor..."
+    if ! grep -q "^export EDITOR='nvim'" "$HOME/.zshrc"; then
+        echo "export EDITOR='nvim'" >> "$HOME/.zshrc"
+    fi
+    if ! grep -q "^export VISUAL='nvim'" "$HOME/.zshrc"; then
+        echo "export VISUAL='nvim'" >> "$HOME/.zshrc"
+    fi
+    if ! grep -q "^alias vim='nvim'" "$HOME/.zshrc"; then
+        echo "alias vim='nvim'" >> "$HOME/.zshrc"
+    fi
+    git config --global core.editor "nvim"
 }
 
 # --- Main Execution ---
