@@ -9,6 +9,8 @@ Also can do initial configuration for setup the dev environment on Mac
 ## 📦 Features
 
 - **Automated macOS Setup:** One-script installation for Homebrew, Ruby (Mise), Node.js, and CLI tools.
+- **`Brewfile`:** Single source of truth for every brew package/cask this setup installs.
+- **`sync.sh`:** Idempotent — run it on a new Mac or an already-configured one to install/update everything.
 - Fully integrated with LSP for intelligent coding assistance.
 - Pre-configured plugins for a seamless development experience.
 - Optimized key mappings and UI enhancements.
@@ -38,6 +40,32 @@ chmod +x setup_xcode.sh
 chmod +x first-setup.sh
 ./first-setup.sh
 ```
+
+### 🔄 Keeping a Mac up to date
+
+On this Mac, or any other Mac already running this config, run `sync.sh` any
+time to install missing packages and pick up config changes. It is safe to
+run repeatedly — it only installs what's missing:
+
+```bash
+chmod +x sync.sh
+./sync.sh
+```
+
+To add a new tool for every machine, add it to `Brewfile` (CLI tools) or
+`Brewfile.gui` (GUI apps) and run `./sync.sh`.
+
+**Headless machines (e.g. a Mac mini with no display):** on first setup, skip
+GUI apps entirely and install terminal tools only:
+
+```bash
+./first-setup.sh --no-gui
+```
+
+`sync.sh` itself never takes arguments — `first-setup.sh --no-gui` caches
+that preference for the machine, so every later plain `./sync.sh` run keeps
+skipping GUI apps too. Run `./first-setup.sh --gui` to turn GUI installs
+back on.
 
 **(Additional step for iOS Development)**
 

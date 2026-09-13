@@ -1,0 +1,16 @@
+# Brewfile.gui — GUI apps and fonts, only for machines with a display.
+# Skipped automatically on headless machines set up with:
+#   ./sync.sh --no-gui
+# Install/update manually with: brew bundle --file=Brewfile.gui
+
+# Fonts (used by GUI terminals like iTerm2; no benefit on a headless box)
+cask "font-hack-nerd-font"
+
+# GUI applications
+cask "alfred"
+cask "github"
+cask "iterm2"
+cask "markedit"
+cask "proxyman"
+cask "sublime-merge"
+cask "sublime-text"

@@ -82,11 +82,8 @@ source $ZSH/oh-my-zsh.sh
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='nvim'
-# fi
+export EDITOR='nvim'
+export VISUAL='nvim'
 
 # Compilation flags
 # export ARCHFLAGS="-arch $(uname -m)"
@@ -109,4 +106,56 @@ source $ZSH/oh-my-zsh.sh
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 eval "$(zoxide init zsh)"
+alias vim='nvim'
+alias vi='nvim'
 alias ls='eza --icons --color=always --git --all'
+export PATH="$HOME/.local/bin:$PATH"
+
+# fzf setup
+export FZF_DEFAULT_OPTS="--style minimal --height ~90% --layout reverse --border --preview 'bat --style=numbers --color=always --line-range :500 {}'"
+source <(fzf --zsh)
+
+# Set fd as the default source for fzf
+export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
+
+# Apply fd to Ctrl+T (file finder)
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+# Make the bat preview explicit for Ctrl+T, matching FZF_DEFAULT_OPTS,
+# so it keeps working even if FZF_DEFAULT_OPTS changes later.
+export FZF_CTRL_T_OPTS="--preview 'bat --style=numbers --color=always --line-range :500 {}'"
+
+# Apply fd to Alt+C (cd into directory finder)
+export FZF_ALT_C_COMMAND='fd --type d --strip-cwd-prefix --hidden --follow --exclude .git'
+
+# Ctrl+R searches history text, not files, so the default bat file preview
+# does not apply here. "--no-preview" is not a real fzf flag (it was being
+# silently ignored) — hide the preview window for this binding instead.
+export FZF_CTRL_R_OPTS="--preview-window=hidden"
+
+_fzf_comprun() {
+  local command=$1
+  shift
+
+  case "$command" in
+    cd)           fzf "$@" --preview 'tree -C {} | head -200' ;;
+    *)            fzf "$@" ;;
+  esac
+}
+
+# Interactively search file contents with ripgrep inside fzf
+rgi() {
+  fzf --disabled --ansi --query "$1" \
+      --bind "start:reload:rg --column --line-number --no-heading --color=always --smart-case {q} || true" \
+      --bind "change:reload:rg --column --line-number --no-heading --color=always --smart-case {q} || true" \
+      --delimiter : \
+      --preview 'bat --style=numbers --color=always --highlight-line {2} {1}' \
+      --preview-window 'up,60%,border-bottom,+{2}+3/3,~3'
+}
+
+fif() {
+  if [ ! "$#" -gt 0 ]; then
+    echo "Need a string to search for!"; return 1;
+  fi
+  rg --files-with-matches --no-messages "$1" | fzf --preview "bat --style=numbers --color=always --line-range :500 {}"
+}
