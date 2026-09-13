@@ -122,6 +122,7 @@ configure_misc() {
     log "Configuring git delta pager..."
     git config --global core.pager "delta"
     git config --global delta.side-by-side true
+    git config --global core.editor "nvim"
 }
 
 main() {
