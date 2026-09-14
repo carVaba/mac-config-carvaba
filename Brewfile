@@ -8,6 +8,7 @@
 
 # Taps
 tap "xcodesorg/made"
+tap "getsentry/xcodebuildmcp"
 
 # CLI tools
 brew "aria2"
