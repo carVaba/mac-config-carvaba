@@ -23,3 +23,6 @@ nvim-linux-x86_64/
 
 # Local debug/startup logs
 *.log
+
+# Editor swap files
+*.swp
