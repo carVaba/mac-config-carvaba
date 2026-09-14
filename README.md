@@ -11,6 +11,7 @@ Also can do initial configuration for setup the dev environment on Mac
 - **Automated macOS Setup:** One-script installation for Homebrew, Ruby (Mise), Node.js, and CLI tools.
 - **`Brewfile`:** Single source of truth for every brew package/cask this setup installs.
 - **`sync.sh`:** Idempotent — run it on a new Mac or an already-configured one to install/update everything.
+- **`update.sh`:** Reverse-sync — finds packages installed by hand on a Mac and offers to add them to `Brewfile`/`Brewfile.gui`.
 - Fully integrated with LSP for intelligent coding assistance.
 - Pre-configured plugins for a seamless development experience.
 - Optimized key mappings and UI enhancements.
@@ -66,6 +67,26 @@ GUI apps entirely and install terminal tools only:
 that preference for the machine, so every later plain `./sync.sh` run keeps
 skipping GUI apps too. Run `./first-setup.sh --gui` to turn GUI installs
 back on.
+
+### 📤 Pulling in a package you installed by hand
+
+`sync.sh` only goes one direction: repo → machine. If you `brew install` or
+`brew install --cask` something directly on a Mac, the repo doesn't know
+about it yet, and other machines won't get it. Run `update.sh` on that Mac
+to go the other direction — it reports anything installed locally that
+isn't yet in `Brewfile`/`Brewfile.gui`, and offers to add it:
+
+```bash
+chmod +x update.sh
+./update.sh
+```
+
+It only looks at `brew leaves` (things you actually asked for), not every
+dependency library brew pulled in, so it won't spam the Brewfile with
+noise. Review the diff (`git diff Brewfile Brewfile.gui`) before committing
+— it may also flag apps you've deliberately excluded from every machine
+(e.g. Slack, Microsoft Edge); just answer "no", or remove those lines again
+if it adds them.
 
 **(Additional step for iOS Development)**
 
