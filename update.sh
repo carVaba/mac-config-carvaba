@@ -1,11 +1,13 @@
 #!/bin/bash
-# Reverse-sync: report (and optionally add) brew packages installed on THIS
-# Mac that aren't yet declared in Brewfile / Brewfile.gui.
+# Reverse-sync: pull local drift on THIS Mac back into the repo, so every
+# other machine picks it up next time it runs sync.sh.
 #
 # sync.sh goes repo -> machine (install what the repo says you need).
-# update.sh goes machine -> repo (pull in what you installed by hand here,
-# e.g. `brew install --cask something` on your MacBook Pro, so every other
-# Mac gets it too next time it runs sync.sh).
+# update.sh goes machine -> repo, for two kinds of drift:
+#   1. Brew packages installed by hand (e.g. `brew install --cask x`) that
+#      aren't yet declared in Brewfile / Brewfile.gui.
+#   2. Neovim config changes made locally (e.g. running :Lazy update, which
+#      rewrites lazy-lock.json) that haven't been committed yet.
 #
 # Only reports "leaf" formulas (brew leaves) — not the library dependencies
 # brew pulled in automatically — so the Brewfile stays a curated tool list,
@@ -56,7 +58,7 @@ diff_new_formulas() {
     done <<< "$installed"
 }
 
-main() {
+check_brew() {
     log "Checking for packages installed here but missing from Brewfile/Brewfile.gui..."
 
     local new_formulas new_casks
@@ -110,6 +112,39 @@ main() {
     fi
 
     warn "Review with 'git diff Brewfile Brewfile.gui', tidy up the placement/comments, then commit."
+}
+
+# --- Neovim config drift (e.g. lazy-lock.json from a local :Lazy update) ---
+check_nvim_config() {
+    log "Checking for local Neovim config changes not yet committed..."
+
+    local changed
+    changed="$(git -C "$REPO_DIR" status --porcelain -- lazy-lock.json init.lua lua/ 2>/dev/null)"
+
+    if [ -z "$changed" ]; then
+        success "No local Neovim config drift — lazy-lock.json and lua/ match the repo."
+        return
+    fi
+
+    warn "Neovim config has local changes not yet committed:"
+    echo "$changed" | sed 's/^/  /'
+
+    echo
+    read -p "Commit these Neovim config changes now? [y/N] " -r reply
+    if [[ ! "$reply" =~ ^[Yy]$ ]]; then
+        log "Left uncommitted. Review with 'git -C \"$REPO_DIR\" diff' and commit when ready."
+        return
+    fi
+
+    git -C "$REPO_DIR" add lazy-lock.json init.lua lua/
+    git -C "$REPO_DIR" commit -m "Sync local Neovim plugin/config changes"
+    success "Committed Neovim config changes."
+}
+
+main() {
+    check_brew
+    echo
+    check_nvim_config
 }
 
 main "$@"
