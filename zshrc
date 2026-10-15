@@ -159,3 +159,35 @@ fif() {
   fi
   rg --files-with-matches --no-messages "$1" | fzf --preview "bat --style=numbers --color=always --line-range :500 {}"
 }
+
+alias xcode26='/Applications/Xcode-26.6.0.app/Contents/MacOS/Xcode'
+
+# Compress a video for sharing. Usage: compressShareVideo input [output]
+# Output defaults to output.mp4; if it exists, uses output_2.mp4, output_3.mp4, ...
+compressShareVideo() {
+  if [ "$#" -lt 1 ]; then
+    echo "Usage: compressShareVideo <input> [output]"; return 1
+  fi
+  if [ ! -f "$1" ]; then
+    echo "Input file not found: $1"; return 1
+  fi
+
+  local input="$1"
+  local output="${2:-output.mp4}"
+  local base="${output%.*}" ext="${output##*.}"
+  local n=2
+  while [ -e "$output" ]; do
+    output="${base}_${n}.${ext}"
+    n=$((n + 1))
+  done
+
+  ffmpeg -i "$input" \
+    -c:v libx264 \
+    -crf 22 \
+    -preset fast \
+    -pix_fmt yuv420p \
+    -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" \
+    -movflags +faststart \
+    -an \
+    "$output" && echo "Created: $output"
+}
